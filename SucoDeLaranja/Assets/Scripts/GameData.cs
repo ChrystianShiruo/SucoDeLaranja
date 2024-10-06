@@ -10,18 +10,21 @@ public class GameData {
             _turns = value;
             OnTurnsChange?.Invoke(value);
         }
+        get => _turns;
     }
     public int Score {
         set {
             _score = value;
             OnScoreChange?.Invoke(value);
         }
+        get => _score;
     }
     public int Matches {
         set {
             _matches = value;
             OnMatchesChange?.Invoke(value);
         }
+        get => _matches;
     }
 
     private CardState[,] _board;

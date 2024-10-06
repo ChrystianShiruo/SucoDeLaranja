@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 
     [SerializeField] private List<CardData> _cardPool;
     [SerializeField] private UIController _board;
+    [SerializeField] private Vector2Int _boardDimensions; //TODO: validate that x*y is not an odd number
 
     private Dictionary<int, CardData> _cardDic;
     private GameData _gameData;
@@ -18,7 +19,7 @@ public class GameController : MonoBehaviour {
     }
 
     private void Start() {
-        StartCoroutine(InitializeGame(new Vector2Int(5,6)));
+        StartCoroutine(InitializeGame(_boardDimensions));
     }
 
     private Dictionary<int, CardData> SetCardDictionary(List<CardData> cardPool) {
@@ -52,17 +53,17 @@ public class GameController : MonoBehaviour {
         tempPool.Shuffle();//shuffling cards;
         tempPool.RemoveRange(pairs, (tempPool.Count - pairs));//picking the first n shuffled cards to use on this game;
 
-        string s = String.Empty;
-        tempPool.ForEach(cardData => s += $"{cardData.id.ToString()}, ");
-        Debug.Log($"Selected cards for next game:\n{s}");
+        //string s = String.Empty; //TODO: Remove
+        //tempPool.ForEach(cardData => s += $"{cardData.id.ToString()}, ");
+        //Debug.Log($"Selected cards for next game:\n{s}");
         //>>
         //<<Adding selected cards pair and shuffling list for random positions;
         tempPool.AddRange(tempPool);
         tempPool.Shuffle();
 
-        s = String.Empty;
-        tempPool.ForEach(cardData => s += $"{cardData.id.ToString()}, ");
-        Debug.Log($"Card order for next game:\n{s}");
+        //s = String.Empty; //TODO: Remove
+        //tempPool.ForEach(cardData => s += $"{cardData.id.ToString()}, ");
+        //Debug.Log($"Card order for next game:\n{s}");
         //>>
         //instantiate setup grid
         _gameData = new GameData(tempPool, layout);
