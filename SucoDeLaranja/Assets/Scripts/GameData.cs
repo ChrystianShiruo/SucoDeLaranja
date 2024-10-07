@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameData {
 
-    public CardState[,] Board { get => _board; }
+    public CardInstance[,] Board { get => _board; }
     public int Turns {
         set {
             _turns = value;
@@ -27,7 +27,7 @@ public class GameData {
         get => _matches;
     }
 
-    private CardState[,] _board;
+    private CardInstance[,] _board;
     private int _turns;
     private int _score;
     private int _matches;
@@ -46,11 +46,11 @@ public class GameData {
     }
 
     private void BuildBoard(CardData[,] cards) {
-        _board = new CardState[cards.GetLength(0), cards.GetLength(1)];
+        _board = new CardInstance[cards.GetLength(0), cards.GetLength(1)];
 
         for(int x = 0; x < cards.GetLength(0); x++) {
             for(int y = 0; y < cards.GetLength(1); y++) {
-                _board[x, y] = new CardState(cards[x, y]);
+                _board[x, y] = new CardInstance(cards[x, y]);
             }
         }
     }

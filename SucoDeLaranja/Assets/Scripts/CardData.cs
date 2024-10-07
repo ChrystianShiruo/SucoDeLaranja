@@ -26,10 +26,4 @@ public class CardData : ScriptableObject {
 
     [SerializeField] private int _id = -1;
 
-    //private void Reset() {
-    //    //id = 3;
-
-    //    name = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this));
-    //    //int.TryParse(Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(this)), out id);
-    //}
 }

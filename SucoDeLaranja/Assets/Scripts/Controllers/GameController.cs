@@ -5,16 +5,24 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-
+    public enum GameState {
+        None,
+        SettingUp,
+        Playing,
+        Finished
+    }
     [SerializeField] private List<CardData> _cardPool;
-    [SerializeField] private UIController _board;
+    [SerializeField] private UIController _uiController;
+    [SerializeField] private CardsManager _cardsManager;
     [SerializeField] private Vector2Int _boardDimensions; //TODO: validate that x*y is not an odd number
 
     private Dictionary<int, CardData> _cardDic;
     private GameData _gameData;
-
+    private GameState _currentState;
+    private Card[,] _cards;
 
     private void Awake() {
+        _currentState = GameState.None;
         _cardDic = SetCardDictionary(_cardPool);
     }
 
@@ -33,17 +41,26 @@ public class GameController : MonoBehaviour {
     }
 
     public IEnumerator InitializeGame(Vector2Int layout) {
+        _currentState = GameState.SettingUp;
         //setup board
         CreateGameData(layout, _cardPool);
 
+        _uiController.Init(_gameData);
         //show all cards
-        _board.Init(_gameData);
-
+        _cardsManager.Init(_gameData);
         //flip cards
+        yield return HideCards(2f);
 
         yield return null;
         //initialize player and player interaction
     }
+
+    private IEnumerator HideCards(float time) {
+        yield return new WaitForSeconds(time);
+        _cardsManager.FlipAllCards();
+
+    }
+
 
     private void CreateGameData(Vector2Int layout, List<CardData> cardPool) {
         List<CardData> tempPool = new List<CardData>(cardPool);

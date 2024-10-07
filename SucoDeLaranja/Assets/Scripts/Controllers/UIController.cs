@@ -15,6 +15,14 @@ public class UIController : MonoBehaviour {
     private int pairs;
     private GameData _gameData;
 
+
+
+    private void OnDestroy() {
+        _gameData.OnScoreChange -= SetScoreText;
+        _gameData.OnTurnsChange -= SetTurnsText;
+        _gameData.OnMatchesChange -= SetMatchesText;
+    }
+
     public void Init(GameData gameData) {
         _gameData = gameData;
 
@@ -26,8 +34,6 @@ public class UIController : MonoBehaviour {
 
         UpdateCounters(gameData);
     }
-
-
 
     private void SetScoreText(int value) {
         UpdateText(_scoreText, $"{value}");
@@ -51,9 +57,5 @@ public class UIController : MonoBehaviour {
         SetTurnsText(gameData.Turns);
     }
 
-    private void OnDestroy() {
-        _gameData.OnScoreChange -= SetScoreText;
-        _gameData.OnTurnsChange -= SetTurnsText;
-        _gameData.OnMatchesChange -= SetMatchesText;
-    }
+   
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class CardsManager : MonoBehaviour {
@@ -10,6 +11,7 @@ public class CardsManager : MonoBehaviour {
 
     private GameData _gameData;
     private GridLayoutGroup _boardPanelLayoutGroup;
+    private List<Card> _cards;
 
     public void Init(GameData gameData) {
         _gameData = gameData;
@@ -23,15 +25,18 @@ public class CardsManager : MonoBehaviour {
     }
 
 
-    private void InstantiateCards(CardState[,] board) {
+    private void InstantiateCards(CardInstance[,] board) {
 
         int width = board.GetLength(0);
         int height = board.GetLength(1);
+        _cards = new List<Card>();
+
 
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 GameObject go = Instantiate(_cardPrefab, _boardPanel);
                 go.GetComponent<Card>().Init(board[x, y]);
+                _cards.Add(go.GetComponent<Card>());
             }
         }
     }
@@ -44,5 +49,9 @@ public class CardsManager : MonoBehaviour {
         y = y / dimensions.y;
         cardScaleMultiplier = (x > y ? y : x) / 100f;
         _boardPanelLayoutGroup.cellSize = new Vector2(x, y);
+    }
+
+    public void FlipAllCards() {
+        _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
     }
 }
