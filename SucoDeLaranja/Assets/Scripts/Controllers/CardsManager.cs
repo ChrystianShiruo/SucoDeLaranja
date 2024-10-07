@@ -47,23 +47,14 @@ public class CardsManager : MonoBehaviour {
         pair.Add(_selectedCard);
         pair.Add(newCard);
 
-        //++ turns
+        GameController.instance.IncrementTurn();
         //compare if another card already selected        
         if(newCard.CardId == _selectedCard.CardId) {
-            //paired! +matches; +score; +combo
-            //newCard.SetState(new CardStatePaired());
-            //_selectedCard.SetState(new CardStatePaired());
+            GameController.instance.PairScored();
             StartCoroutine(SyncCardStates(typeof(CardStatePaired), pair));
-
-            Debug.Log("Paired!!");
         } else {
-            //not paired; reset combo; flip cards to back again
-
-            //newCard.SetState(new CardStateFacingDown());
-            //_selectedCard.SetState(new CardStateFacingDown());
+            GameController.instance.PairFailed();            
             StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
-
-            Debug.Log("Not paired!!");
         }
 
         _selectedCard = null;
@@ -104,7 +95,6 @@ public class CardsManager : MonoBehaviour {
         //wait until all cards finished last state
         foreach(Card card in cards) {
             yield return new WaitWhile(() => card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1 < 0.99f);
-            Debug.Log($"{card.CardId} finished anim {card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime}");
         }
 
         yield return new WaitForSeconds(1f);

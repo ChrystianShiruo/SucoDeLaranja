@@ -1556,6 +1556,7 @@ MonoBehaviour:
   _uiController: {fileID: 2094434784}
   _cardsManager: {fileID: 2094434786}
   _boardDimensions: {x: 4, y: 4}
+  _preGameTime: 2
 --- !u!4 &2094434783
 Transform:
   m_ObjectHideFlags: 0
@@ -1598,7 +1599,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7330273b56dd46747a3c3003e4fd26e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _selectedCard: {fileID: 0}
 --- !u!114 &2094434786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1613,3 +1613,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardPrefab: {fileID: 7076809510798246238, guid: 96f4b2f67ed7d4e44a8a9e69134ee6ae, type: 3}
   _boardPanel: {fileID: 1047042874}
+  _selectedCard: {fileID: 0}

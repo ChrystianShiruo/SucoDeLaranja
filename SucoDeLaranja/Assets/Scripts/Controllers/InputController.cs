@@ -19,6 +19,9 @@ public class InputController : MonoBehaviour {
     }
 
     public void CardMouseDown(Card card) {
+        if(GameController.instance.CurrentState!= GameController.GameState.Playing) {
+            return;
+        }
 
         if(card.CardInstance.state.GetType() == typeof(CardStateFacingDown)) {
             CardsManager.instance.SelectCard(card);
