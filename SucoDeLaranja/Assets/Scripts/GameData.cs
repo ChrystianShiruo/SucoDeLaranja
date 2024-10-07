@@ -31,6 +31,7 @@ public class GameData {
     private int _turns;
     private int _score;
     private int _matches;
+    private int _comboLevel;
 
     public Action<int> OnTurnsChange;
     public Action<int> OnScoreChange;
@@ -43,6 +44,7 @@ public class GameData {
         _turns = 0;
         _score = 0;
         _matches = 0;
+        _comboLevel = 0;
     }
 
     private void BuildBoard(CardData[,] cards) {
@@ -74,4 +76,11 @@ public class GameData {
         return cardMatrix;
     }
 
+    public void AddScore() {
+        Score += 1 + _comboLevel;
+        _comboLevel++;
+    }
+    public void ResetCombo() {
+        _comboLevel = 0;
+    }
 }
