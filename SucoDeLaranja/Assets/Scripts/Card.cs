@@ -9,6 +9,7 @@ public class Card : MonoBehaviour {
 
     public CardInstance CardInstance { get => _cardState; }
     public int CardId { get => _cardState.cardData.id; }
+    public Animator Animator { get => _animator; }
 
     [SerializeField] private TextMeshProUGUI _labelText;
     [SerializeField] private Renderer _cardBackground;
@@ -16,7 +17,7 @@ public class Card : MonoBehaviour {
     private CardInstance _cardState;
     //private Action OnChangeCardState;
     private Animator _animator;
-
+    private List<ICardState> _stateRoutineQueue;
 
     private void OnMouseDown() {
         InputController.instance.CardMouseDown(this);
@@ -24,8 +25,9 @@ public class Card : MonoBehaviour {
 
 
     public void Init(CardInstance cardState) {
+        _stateRoutineQueue = new List<ICardState>();
         _animator = GetComponent<Animator>();
-
+        StartCoroutine(StateMachineRoutine());
         _cardState = cardState;
         _cardBackground.material = new Material(_cardBackground.material);
         _cardBackground.material.color = cardState.cardData.color;
@@ -35,19 +37,33 @@ public class Card : MonoBehaviour {
 
 
     public void ShowCard() {
-        _animator.SetTrigger("Flip");
+        _animator.SetBool("Show", true);
         //TODO: call flip sfx
     }
     public void HideCard() {
-        _animator.SetTrigger("Flip");
+        _animator.SetBool("Show", false);
     }
 
+    //FSM
     public void SetState(ICardState newState) {
-
-        _cardState.state?.Exit();
-
-        newState.Enter(this, _cardState.state);
-        _cardState.state = newState;
-        //OnChangeCardState?.Invoke();
+        _stateRoutineQueue.Add(newState);
     }
+
+    private IEnumerator StateMachineRoutine() {
+        while(true) {
+            if(_stateRoutineQueue.Count > 0) {
+                _cardState.state?.Exit();
+
+                _stateRoutineQueue[0].Enter(this, _cardState.state);
+
+                yield return _stateRoutineQueue[0].Execute();
+
+                _cardState.state = _stateRoutineQueue[0];
+                _stateRoutineQueue.RemoveAt(0);
+            } else {
+                yield return null;
+            }
+        }
+    }
+
 }

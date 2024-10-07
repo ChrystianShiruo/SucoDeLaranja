@@ -10,12 +10,17 @@ using System.Collections;
 public class CardState : ICardState {
 
     protected Card _card;
-    
-    public virtual void Execute() {
+    protected ICardState _oldState;
+
+
+    public virtual IEnumerator Execute() {        
+
+        yield return null;
     }
 
     public virtual void Enter(Card card, ICardState oldState) {
         _card = card;
+        _oldState = oldState;
         Debug.Log($"Enter {this}");
     }
 
@@ -26,7 +31,7 @@ public class CardState : ICardState {
 
 public interface ICardState {
 
-    void Execute();// TODO: change to coroutine?
+    IEnumerator Execute();
     void Enter(Card card, ICardState oldState);
     void Exit();
 }

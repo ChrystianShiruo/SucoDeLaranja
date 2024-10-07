@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardsManager : MonoBehaviour {
 
+    public static CardsManager instance;
     public static float cardScaleMultiplier;
 
     [SerializeField] private GameObject _cardPrefab;
@@ -12,9 +15,13 @@ public class CardsManager : MonoBehaviour {
     private GameData _gameData;
     private GridLayoutGroup _boardPanelLayoutGroup;
     private List<Card> _cards;
+    public Card _selectedCard;
+
 
     public void Init(GameData gameData) {
         _gameData = gameData;
+        _selectedCard = null;
+        instance = this;
 
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
         _boardPanelLayoutGroup.constraintCount = _gameData.Board.GetLength(1);
@@ -24,6 +31,43 @@ public class CardsManager : MonoBehaviour {
 
     }
 
+    public void FlipAllCards() {
+        _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
+    }
+
+    public void SelectCard(Card newCard) {
+        newCard.SetState(new CardStateSelected());
+
+        if(_selectedCard == null) {
+            _selectedCard = newCard;
+            Debug.Log("Selected first card");
+            return;
+        }
+        List<Card> pair = new List<Card>();
+        pair.Add(_selectedCard);
+        pair.Add(newCard);
+
+        //++ turns
+        //compare if another card already selected        
+        if(newCard.CardId == _selectedCard.CardId) {
+            //paired! +matches; +score; +combo
+            //newCard.SetState(new CardStatePaired());
+            //_selectedCard.SetState(new CardStatePaired());
+            StartCoroutine(SyncCardStates(typeof(CardStatePaired), pair));
+
+            Debug.Log("Paired!!");
+        } else {
+            //not paired; reset combo; flip cards to back again
+
+            //newCard.SetState(new CardStateFacingDown());
+            //_selectedCard.SetState(new CardStateFacingDown());
+            StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
+
+            Debug.Log("Not paired!!");
+        }
+
+        _selectedCard = null;
+    }
 
     private void InstantiateCards(CardInstance[,] board) {
 
@@ -51,7 +95,21 @@ public class CardsManager : MonoBehaviour {
         _boardPanelLayoutGroup.cellSize = new Vector2(x, y);
     }
 
-    public void FlipAllCards() {
-        _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
+    //TODO: not working properly, redo caching if animation ended on Card class
+    private IEnumerator SyncCardStates(Type state, List<Card> cards) {
+
+        //wait frame for animations to start
+        yield return null;
+
+        //wait until all cards finished last state
+        foreach(Card card in cards) {
+            yield return new WaitWhile(() => card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1 < 0.99f);
+            Debug.Log($"{card.CardId} finished anim {card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime}");
+        }
+
+        yield return new WaitForSeconds(1f);
+        cards.ForEach(card => card.SetState((ICardState)Utils.GetInstance(state)));
+
     }
+
 }

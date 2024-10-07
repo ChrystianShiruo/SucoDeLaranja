@@ -1555,7 +1555,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 408c6b6558601be449510e69a639323e, type: 2}
   _uiController: {fileID: 2094434784}
   _cardsManager: {fileID: 2094434786}
-  _boardDimensions: {x: 2, y: 2}
+  _boardDimensions: {x: 4, y: 4}
 --- !u!4 &2094434783
 Transform:
   m_ObjectHideFlags: 0
@@ -1598,6 +1598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7330273b56dd46747a3c3003e4fd26e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _selectedCard: {fileID: 0}
 --- !u!114 &2094434786
 MonoBehaviour:
   m_ObjectHideFlags: 0

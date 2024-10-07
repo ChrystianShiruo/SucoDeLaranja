@@ -15,4 +15,9 @@ public static class Utils {
             list[n] = value;
         }
     }
+
+    public static object GetInstance(Type type) {
+        return Activator.CreateInstance(type);
+    }
+
 }
