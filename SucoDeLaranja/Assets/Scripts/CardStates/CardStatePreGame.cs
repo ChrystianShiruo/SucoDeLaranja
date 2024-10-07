@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class CardStatePreGame : CardState {
 
-    public override void Execute() {
-    }
 
     public override void Enter(Card card, ICardState oldState) {
         base.Enter(card, oldState);
