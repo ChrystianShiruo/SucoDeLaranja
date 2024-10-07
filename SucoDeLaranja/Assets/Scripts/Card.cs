@@ -10,14 +10,17 @@ public class Card : MonoBehaviour {
     public CardState CardState { get => _cardState; }
 
     [SerializeField] private TextMeshProUGUI _labelText;
-    [SerializeField] private Image _backgroundImage;
+    [SerializeField] private Renderer _cardBackground;
 
     private CardState _cardState;
 
     public void Init(CardState cardState) {
         _cardState = cardState;
-        _backgroundImage.sprite = cardState.cardData.sprite;
-        _backgroundImage.color = cardState.cardData.color;
+        _cardBackground.material = new Material(_cardBackground.material);
+        _cardBackground.material.color = cardState.cardData.color;
+
         _labelText.text = $"{_cardState.cardData.id}";
+
+        transform.localScale *= UIController.cardScaleMultiplier * _cardState.cardData.cellFill;
     }
 }

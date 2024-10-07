@@ -37,23 +37,13 @@ public class GameData {
     public Action<int> OnMatchesChange;
 
 
-    //public GameData(CardData[,] cards) {
-    //    BuildBoard(cards);
-    //    _turns = 0;
-    //    _score = 0;
-    //    _matches = 0;
-    //}
     public GameData(List<CardData> cards, Vector2Int dimensions) {
-        //BuildBoard(cards);
         BuildBoard(FillCardMatrix(cards, dimensions));
 
         _turns = 0;
         _score = 0;
         _matches = 0;
     }
-
-
-
 
     private void BuildBoard(CardData[,] cards) {
         _board = new CardState[cards.GetLength(0), cards.GetLength(1)];
@@ -84,21 +74,4 @@ public class GameData {
         return cardMatrix;
     }
 
-}
-public class CardState {
-
-    public CardData cardData;
-    public State state;
-
-    public enum State {
-        Hidden,
-        Selected,
-        Paired,
-        Showing
-    }
-
-    public CardState(CardData data) {
-        this.cardData = data;
-        state = State.Hidden;
-    }
 }

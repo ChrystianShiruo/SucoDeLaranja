@@ -22,6 +22,7 @@ public class CardData : ScriptableObject {
 
     public Sprite sprite;
     public Color color;
+    [Range(0, 1f)][Tooltip("how much of its allocated space the card will occupy, 1 means no padding between cards")] public float cellFill= .9f;
 
     [SerializeField] private int _id = -1;
 

@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   color: {r: 1, g: 0.41960788, b: 0.41960788, a: 1}
+  cellFill: 0.9
+  _id: 11

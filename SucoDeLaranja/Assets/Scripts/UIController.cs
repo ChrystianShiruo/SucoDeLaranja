@@ -5,6 +5,9 @@ using TMPro;
 
 public class UIController : MonoBehaviour {
 
+    public static float cardScaleMultiplier;
+
+
     [Header("Board")]
     [SerializeField] private GameObject _cardPrefab;
     [SerializeField] private RectTransform _boardPanel;
@@ -24,8 +27,8 @@ public class UIController : MonoBehaviour {
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
         _boardPanelLayoutGroup.constraintCount = _gameData.Board.GetLength(1);
 
+        SetBoardLayout(_boardPanel, new Vector2Int(_gameData.Board.GetLength(0), _gameData.Board.GetLength(1)));
         InstantiateCards(_gameData.Board);
-        SetCardsSize(_boardPanel, new Vector2Int(_gameData.Board.GetLength(0), _gameData.Board.GetLength(1)));
 
         pairs = (_gameData.Board.GetLength(0) * _gameData.Board.GetLength(1)) / 2;
         _gameData.OnScoreChange += SetScoreText;
@@ -60,12 +63,13 @@ public class UIController : MonoBehaviour {
     }
 
 
-    private void SetCardsSize(RectTransform boardPanel, Vector2Int dimensions) {
+    private void SetBoardLayout(RectTransform boardPanel, Vector2Int dimensions) {
         float x = boardPanel.rect.width;
         float y = boardPanel.rect.height;
         Debug.Log($"{x}, {y}");
         x = x / dimensions.x;
         y = y / dimensions.y;
+        cardScaleMultiplier = (x > y ? y : x) / 100f;
         _boardPanelLayoutGroup.cellSize = new Vector2(x, y);
     }
 
@@ -80,5 +84,11 @@ public class UIController : MonoBehaviour {
                 go.GetComponent<Card>().Init(board[x, y]);
             }
         }
+    }
+
+    private void OnDestroy() {
+        _gameData.OnScoreChange -= SetScoreText;
+        _gameData.OnTurnsChange -= SetTurnsText;
+        _gameData.OnMatchesChange -= SetMatchesText;
     }
 }

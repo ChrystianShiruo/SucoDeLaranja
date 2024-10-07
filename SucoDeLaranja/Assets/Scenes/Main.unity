@@ -376,7 +376,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 12
   field of view: 60
   orthographic: 1
   orthographic size: 5
@@ -715,9 +715,9 @@ Canvas:
   m_GameObject: {fileID: 1247736682}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
+  m_PlaneDistance: 11
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1553,7 +1553,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6b102b091fe477b479c32205c37e988e, type: 2}
   - {fileID: 11400000, guid: 408c6b6558601be449510e69a639323e, type: 2}
   _board: {fileID: 2094434784}
-  _boardDimensions: {x: 2, y: 3}
+  _boardDimensions: {x: 2, y: 2}
 --- !u!4 &2094434783
 Transform:
   m_ObjectHideFlags: 0
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae5a5941947e9624aa56a160d734fecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardPrefab: {fileID: 5512971596399004769, guid: 1dd07a2828b906e428ba54aee09f2d03, type: 3}
+  _cardPrefab: {fileID: 7076809510798246238, guid: 96f4b2f67ed7d4e44a8a9e69134ee6ae, type: 3}
   _boardPanel: {fileID: 1047042874}
   _scoreText: {fileID: 1744618731}
   _matchesText: {fileID: 475389895}
