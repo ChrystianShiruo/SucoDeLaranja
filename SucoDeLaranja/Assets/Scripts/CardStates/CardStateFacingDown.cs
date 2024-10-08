@@ -5,18 +5,11 @@ using UnityEngine;
 public class CardStateFacingDown : CardState {
 
     public override IEnumerator Execute() {
-        //_card.HideCard();
 
         Type oldType = _oldState.GetType();
-        Debug.Log(oldType);
 
         if(oldType == GetType()) {
-            Debug.Log("FaceDownTrigger");
             _card.TriggerAnimation("FaceDownTrigger");
-            //_card.HideCard();
-
-        } else {
-            //_card.HideCard();
         }
 
         yield return base.Execute();
