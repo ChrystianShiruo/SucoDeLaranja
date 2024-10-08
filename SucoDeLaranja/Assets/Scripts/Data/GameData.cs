@@ -63,7 +63,8 @@ public class GameData {
         this.Score = gameData.Score;
         this.Matches = gameData._matches;
         this._comboLevel = gameData._comboLevel;
-        this.Pairs = gameData.Pairs;
+
+        this.Pairs = (Board.Length * Board[0].cardArray.Length) / 2; ;
     }
     public void AddScore() {
         Score += 1 + _comboLevel;

@@ -72,20 +72,16 @@ public class GameController : MonoBehaviour {
         CurrentState = GameState.SettingUp;
 
         //retrieve board
-        //_gameData = new GameData(gameData);
         _gameData = new GameData(gameData);
-
         //show all cards
         _uiController.Init(_gameData);
         _cardsManager.Init(_gameData);
         //load card states
         _cardsManager.LoadAllCardStates();
-        //yield return HideCards(_preGameTime);
-        //allow player interaction with the game
-
 
         yield return null;
 
+        //allow player interaction with the game
         CurrentState = GameState.Playing;
     }
 

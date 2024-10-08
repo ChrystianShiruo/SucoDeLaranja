@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class UIController : MonoBehaviour {
@@ -11,13 +9,12 @@ public class UIController : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _matchesText;
     [SerializeField] private TextMeshProUGUI _turnsText;
-    [Space(40)]
-    [SerializeField] private SaveButton _saveButton;
 
     private GameData _gameData;
     private Action<int> _scoreChangeActions;
     private Action<int> _turnsChangeActions;
     private Action<int> _matchesChangeActions;
+
 
     private void OnDestroy() {
         if(_scoreChangeActions != null) {
@@ -58,7 +55,14 @@ public class UIController : MonoBehaviour {
     public void NewGame() {
         GameController.Instance.NewGame();
     }
+    public void ReturnToMenu() {
+        if(SucoDeLaranja.SceneManager.Instance != null) {
+            SucoDeLaranja.SceneManager.Instance.LoadScene(0);
+            return;
+        }
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
 
+    }
 
 
     private void SetScoreText(int value) {
