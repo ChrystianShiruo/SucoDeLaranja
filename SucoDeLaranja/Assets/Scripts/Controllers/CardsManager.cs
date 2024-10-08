@@ -105,7 +105,8 @@ public class CardsManager : MonoBehaviour {
     }
 
     private IEnumerator SyncCardStates(Type state, List<Card> cards) {
-        //TODO: block save
+        Action waitFinish = () => { };
+        SaveButton.InteractableWaitQueue += waitFinish;
         //wait frame for animations to start
         yield return null;
 
@@ -119,7 +120,7 @@ public class CardsManager : MonoBehaviour {
         yield return new WaitForSeconds(animationLenght);
         yield return new WaitForSeconds(.5f);
         cards.ForEach(card => card.SetState((CardState)Utils.CreateNewInstance(state)));
-        //TODO: reenable save
+        SaveButton.InteractableWaitQueue -= waitFinish;
     }
 
 }
