@@ -70,7 +70,9 @@ public class GameData {
         Score += 1 + _comboLevel;
         _comboLevel++;
     }
-
+    public void DecreaseScore() {
+        Score --;
+    }
     public void ResetCombo() {
         _comboLevel = 0;
     }

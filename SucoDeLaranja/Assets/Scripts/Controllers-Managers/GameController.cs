@@ -126,6 +126,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void PairFailed() {
+        _gameData.DecreaseScore();
         _gameData.ResetCombo();
         OnMismatch?.Invoke();
     }
