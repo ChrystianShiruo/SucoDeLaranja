@@ -78,7 +78,7 @@ public class GameController : MonoBehaviour {
         _cardsManager.Init(_gameData);
         //load card states
         _cardsManager.LoadAllCardStates();
-
+        _boardDimensions = _gameData.Dimensions;
         yield return null;
 
         //allow player interaction with the game
@@ -126,6 +126,7 @@ public class GameController : MonoBehaviour {
     }
 
     public void PairFailed() {
+        _gameData.DecreaseScore();
         _gameData.ResetCombo();
         OnMismatch?.Invoke();
     }
@@ -142,6 +143,10 @@ public class GameController : MonoBehaviour {
     }
 
     #region Game Setup
+    public bool NewGame(Vector2Int layout) {
+        _boardDimensions = layout;
+        return NewGame();
+    }
     public bool NewGame() {
         //validate that x*y is not an odd number
         if((_boardDimensions.x * _boardDimensions.y) % 2 != 0) {
