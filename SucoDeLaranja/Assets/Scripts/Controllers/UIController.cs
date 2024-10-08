@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -6,34 +7,61 @@ using TMPro;
 public class UIController : MonoBehaviour {
 
 
-
     [Header("Counters")]
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _matchesText;
     [SerializeField] private TextMeshProUGUI _turnsText;
+    [Space(40)]
+    [SerializeField] private SaveButton _saveButton;
 
     private int pairs;
     private GameData _gameData;
-
-
+    private Action<int> _scoreChangeActions;
+    private Action<int> _turnsChangeActions;
+    private Action<int> _matchesChangeActions;
 
     private void OnDestroy() {
-        _gameData.OnScoreChange -= SetScoreText;
-        _gameData.OnTurnsChange -= SetTurnsText;
-        _gameData.OnMatchesChange -= SetMatchesText;
+        if(_scoreChangeActions != null) {
+            _gameData.OnScoreChange -= _scoreChangeActions;
+            _scoreChangeActions = null;
+        }
+        if(_turnsChangeActions != null) {
+            _gameData.OnTurnsChange -= _turnsChangeActions;
+            _turnsChangeActions = null;
+        }
+        if(_matchesChangeActions != null) {
+            _gameData.OnMatchesChange -= _matchesChangeActions;
+            _matchesChangeActions = null;
+        }
     }
 
     public void Init(GameData gameData) {
+        OnDestroy();
+
         _gameData = gameData;
+        pairs = (_gameData.Board.Length * _gameData.Board[0].cardArray.Length) / 2;
+        _scoreChangeActions += SetScoreText;
+        _gameData.OnScoreChange += _scoreChangeActions;
 
+        _turnsChangeActions += SetTurnsText;
+        _gameData.OnTurnsChange += _turnsChangeActions;
 
-        pairs = (_gameData.Board.GetLength(0) * _gameData.Board.GetLength(1)) / 2;
-        _gameData.OnScoreChange += SetScoreText;
-        _gameData.OnTurnsChange += SetTurnsText;
-        _gameData.OnMatchesChange += SetMatchesText;
-
-        UpdateCounters(gameData);
+        _matchesChangeActions += SetMatchesText;
+        _gameData.OnMatchesChange += _matchesChangeActions;
+        UpdateCounters(_gameData);
     }
+
+    public void LoadGame() {
+        GameController.instance.LoadGame();
+    }
+    public void SaveGame() {
+        GameController.instance.SaveGame();
+    }
+    public void NewGame() {
+        GameController.instance.NewGame();
+    }
+
+
 
     private void SetScoreText(int value) {
         UpdateText(_scoreText, $"{value}");
@@ -56,6 +84,4 @@ public class UIController : MonoBehaviour {
         SetMatchesText(gameData.Matches);
         SetTurnsText(gameData.Turns);
     }
-
-   
 }

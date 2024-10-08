@@ -7,11 +7,17 @@ using System.Collections;
  *  Selected
  *  Paired
  */
+[Serializable]
 public class CardState : ICardState {
 
+    public string StateName { get => _stateName; }
     protected Card _card;
     protected ICardState _oldState;
+    [SerializeField] private string _stateName;
 
+    public CardState() {        
+        _stateName = this.GetType().ToString();
+    }
 
     public virtual IEnumerator Execute() {        
 
@@ -21,7 +27,7 @@ public class CardState : ICardState {
     public virtual void Enter(Card card, ICardState oldState) {
         _card = card;
         _oldState = oldState;
-        Debug.Log($"Enter {this}");
+        Debug.Log($"Enter {this}"); 
     }
 
     public virtual void Exit() {

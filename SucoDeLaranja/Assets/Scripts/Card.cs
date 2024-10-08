@@ -7,17 +7,17 @@ using TMPro;
 
 public class Card : MonoBehaviour {
 
-    public CardInstance CardInstance { get => _cardState; }
-    public int CardId { get => _cardState.cardData.id; }
+    public CardInstance CardInstance { get => _cardInstance; }
+    public int CardId { get => _cardInstance.cardData.id; }
     public Animator Animator { get => _animator; }
 
     [SerializeField] private TextMeshProUGUI _labelText;
     [SerializeField] private Renderer _cardBackground;
 
-    private CardInstance _cardState;
+    private CardInstance _cardInstance;
     //private Action OnChangeCardState;
     private Animator _animator;
-    private List<ICardState> _stateRoutineQueue;
+    private List<CardState> _stateRoutineQueue;
 
     private void OnMouseDown() {
         InputController.instance.CardMouseDown(this);
@@ -25,40 +25,48 @@ public class Card : MonoBehaviour {
 
 
     public void Init(CardInstance cardState) {
-        _stateRoutineQueue = new List<ICardState>();
+        _stateRoutineQueue = new List<CardState>();
         _animator = GetComponent<Animator>();
         StartCoroutine(StateMachineRoutine());
-        _cardState = cardState;
+        _cardInstance = cardState;
         _cardBackground.material = new Material(_cardBackground.material);
         _cardBackground.material.color = cardState.cardData.color;
-        _labelText.text = $"{_cardState.cardData.id}";
-        transform.localScale *= CardsManager.cardScaleMultiplier * _cardState.cardData.cellFill;
+        _labelText.text = $"{_cardInstance.cardData.id}";
+        transform.localScale *= CardsManager.cardScaleMultiplier * _cardInstance.cardData.cellFill;
+
     }
 
-
+    #region Animation
     public void ShowCard() {
         _animator.SetBool("Show", true);
         //TODO: call flip sfx
     }
+
     public void HideCard() {
         _animator.SetBool("Show", false);
     }
-
+    public void TriggerAnimation(string trigger) {
+        _animator.SetTrigger(trigger);
+    }
+    #endregion
     //FSM
-    public void SetState(ICardState newState) {
+    public void LoadState() {
+        SetState((CardState)Utils.CreateNewInstance(CardInstance.state.StateName));
+    }
+    public void SetState(CardState newState) {
         _stateRoutineQueue.Add(newState);
     }
 
     private IEnumerator StateMachineRoutine() {
         while(true) {
             if(_stateRoutineQueue.Count > 0) {
-                _cardState.state?.Exit();
+                _cardInstance.state?.Exit();
 
-                _stateRoutineQueue[0].Enter(this, _cardState.state);
+                _stateRoutineQueue[0].Enter(this, _cardInstance.state);
 
                 yield return _stateRoutineQueue[0].Execute();
 
-                _cardState.state = _stateRoutineQueue[0];
+                _cardInstance.state = _stateRoutineQueue[0];
                 _stateRoutineQueue.RemoveAt(0);
             } else {
                 yield return null;
