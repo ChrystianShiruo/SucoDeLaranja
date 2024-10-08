@@ -6,22 +6,37 @@ using UnityEngine.UI;
 
 public class CardsManager : MonoBehaviour {
 
-    public static CardsManager instance;
+    public static CardsManager Instance;
     public static float cardScaleMultiplier;
+
+    public Action OnSelectFirstCard;
 
     [SerializeField] private GameObject _cardPrefab;
     [SerializeField] private RectTransform _boardPanel;
 
+    private Card SelectedCard {
+        get => _selectedCard;
+        set {
+            _selectedCard = value;
+            if(_selectedCard != null) {
+                OnSelectFirstCard?.Invoke();
+            }
+        }
+    }
     private GameData _gameData;
     private GridLayoutGroup _boardPanelLayoutGroup;
     private List<Card> _cards;
     private Card _selectedCard;
 
+    private void Awake() {
+        if(Instance == null) {
+            Instance = this;
+        }
+    }
 
     public void Init(GameData gameData) {
         ResetBoard();
         _gameData = gameData;
-        instance = this;
 
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
         _boardPanelLayoutGroup.constraintCount = _gameData.Board[0].cardArray.Length;
@@ -46,25 +61,27 @@ public class CardsManager : MonoBehaviour {
         newCard.SetState(new CardStateSelected());
 
         if(_selectedCard == null) {
-            _selectedCard = newCard;
+            SelectedCard = newCard;
             Debug.Log("Selected first card");
+            //flip sfx
+
             return;
         }
         List<Card> pair = new List<Card>();
         pair.Add(_selectedCard);
         pair.Add(newCard);
 
-        GameController.instance.IncrementTurn();
+        GameController.Instance.IncrementTurn();
         //compare if another card already selected        
         if(newCard.CardId == _selectedCard.CardId) {
-            GameController.instance.PairScored();
+            GameController.Instance.PairScored();
             pair.ForEach(card => card.SetState(new CardStatePaired()));
         } else {
-            GameController.instance.PairFailed();
+            GameController.Instance.PairFailed();
             StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
         }
 
-        _selectedCard = null;
+        SelectedCard = null;
     }
 
     private Card GetSelectedCard() {
