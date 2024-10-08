@@ -33,6 +33,7 @@ public class Card : MonoBehaviour {
         _cardBackground.material.color = cardState.cardData.color;
         _labelText.text = $"{_cardInstance.cardData.id}";
         transform.localScale *= CardsManager.cardScaleMultiplier * _cardInstance.cardData.cellFill;
+
     }
 
 

@@ -14,24 +14,40 @@ public class UIController : MonoBehaviour {
 
     private int pairs;
     private GameData _gameData;
-
+    private Action<int> _scoreChangeActions;
+    private Action<int> _turnsChangeActions;
+    private Action<int> _matchesChangeActions;
 
 
     private void OnDestroy() {
-        _gameData.OnScoreChange -= SetScoreText;
-        _gameData.OnTurnsChange -= SetTurnsText;
-        _gameData.OnMatchesChange -= SetMatchesText;
+        if(_scoreChangeActions != null) {
+            _gameData.OnScoreChange -= _scoreChangeActions;
+            _scoreChangeActions = null;
+        }
+        if(_turnsChangeActions != null) {
+            _gameData.OnTurnsChange -= _turnsChangeActions;
+            _turnsChangeActions = null;
+        }
+        if(_matchesChangeActions != null) {
+            _gameData.OnMatchesChange -= _matchesChangeActions;
+            _matchesChangeActions = null;
+        }
+
     }
 
     public void Init(GameData gameData) {
+        OnDestroy();
+
         _gameData = gameData;
-
-
         pairs = (_gameData.Board.Length * _gameData.Board[0].cardArray.Length) / 2;
-        _gameData.OnScoreChange += SetScoreText;
-        _gameData.OnTurnsChange += SetTurnsText;
-        _gameData.OnMatchesChange += SetMatchesText;
+        _scoreChangeActions += SetScoreText;
+        _gameData.OnScoreChange += _scoreChangeActions;
 
+        _turnsChangeActions += SetTurnsText;
+        _gameData.OnTurnsChange += _turnsChangeActions;
+
+        _matchesChangeActions += SetMatchesText;
+        _gameData.OnMatchesChange += _matchesChangeActions;
         UpdateCounters(_gameData);
     }
 
@@ -40,6 +56,9 @@ public class UIController : MonoBehaviour {
     }
     public void SaveGame() {
         GameController.instance.SaveGame();
+    }
+    public void NewGame() {
+        GameController.instance.NewGame();
     }
 
 
@@ -65,6 +84,4 @@ public class UIController : MonoBehaviour {
         SetMatchesText(gameData.Matches);
         SetTurnsText(gameData.Turns);
     }
-
-   
 }

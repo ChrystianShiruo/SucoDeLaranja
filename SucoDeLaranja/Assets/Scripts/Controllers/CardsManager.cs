@@ -19,8 +19,9 @@ public class CardsManager : MonoBehaviour {
 
 
     public void Init(GameData gameData) {
+        ResetBoard();
         _gameData = gameData;
-        _selectedCard = null;
+        //_selectedCard = null;
         instance = this;
 
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
@@ -29,9 +30,12 @@ public class CardsManager : MonoBehaviour {
         SetBoardLayout(_boardPanel, new Vector2Int(_gameData.Board.Length, _gameData.Board[0].cardArray.Length));
         InstantiateCards(_gameData.Board);
 
+        _selectedCard = GetSelectedCard();
     }
 
+
     public void FlipAllCards() {
+        Debug.Log(_cards.Count);
         _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
     }
 
@@ -53,11 +57,21 @@ public class CardsManager : MonoBehaviour {
             GameController.instance.PairScored();
             StartCoroutine(SyncCardStates(typeof(CardStatePaired), pair));
         } else {
-            GameController.instance.PairFailed();            
+            GameController.instance.PairFailed();
             StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
         }
 
         _selectedCard = null;
+    }
+
+    private Card GetSelectedCard() {
+        return _cards.Find(card => card.CardInstance.state.StateName == typeof(CardStateSelected).ToString());
+    }
+    private void ResetBoard() {
+        Card[] children = _boardPanel.GetComponentsInChildren<Card>();
+        foreach(Card card in children) {
+            Destroy(card.gameObject);
+        }
     }
 
     private void InstantiateCards(CardInstanceArray[] board) {
@@ -79,7 +93,6 @@ public class CardsManager : MonoBehaviour {
     private void SetBoardLayout(RectTransform boardPanel, Vector2Int dimensions) {
         float x = boardPanel.rect.width;
         float y = boardPanel.rect.height;
-        Debug.Log($"{x}, {y}");
         x = x / dimensions.x;
         y = y / dimensions.y;
         cardScaleMultiplier = (x > y ? y : x) / 100f;
