@@ -21,7 +21,6 @@ public class CardsManager : MonoBehaviour {
     public void Init(GameData gameData) {
         ResetBoard();
         _gameData = gameData;
-        //_selectedCard = null;
         instance = this;
 
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
@@ -62,7 +61,6 @@ public class CardsManager : MonoBehaviour {
             pair.ForEach(card => card.SetState(new CardStatePaired()));
         } else {
             GameController.instance.PairFailed();
-            //pair.ForEach(card => card.SetState(new CardStateFacingDown()));
             StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
         }
 
@@ -114,12 +112,12 @@ public class CardsManager : MonoBehaviour {
         //wait until all cards finished last state
         foreach(Card card in cards) {
             animationLenght = animationLenght > card.Animator.GetCurrentAnimatorStateInfo(0).length ? animationLenght : card.Animator.GetCurrentAnimatorStateInfo(0).length;
-            //yield return new WaitWhile(() => card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1 < 0.99f);
         }
 
         yield return new WaitForSeconds(animationLenght);
         yield return new WaitForSeconds(.5f);
         cards.ForEach(card => card.SetState((CardState)Utils.CreateNewInstance(state)));
+        //if routine never ends for some reason save button will be locked on interactable = false, and it probably should if it happens
         SaveButton.InteractableWaitQueue -= waitFinish;
     }
 

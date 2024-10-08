@@ -18,9 +18,7 @@ public class UIController : MonoBehaviour {
     private GameData _gameData;
     private Action<int> _scoreChangeActions;
     private Action<int> _turnsChangeActions;
-    private Action<int> _matchesChangeActions;   
-
-    
+    private Action<int> _matchesChangeActions;
 
     private void OnDestroy() {
         if(_scoreChangeActions != null) {
@@ -35,7 +33,6 @@ public class UIController : MonoBehaviour {
             _gameData.OnMatchesChange -= _matchesChangeActions;
             _matchesChangeActions = null;
         }
-
     }
 
     public void Init(GameData gameData) {
