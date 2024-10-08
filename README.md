@@ -6,7 +6,8 @@ Instructions
 		- Scenes/Menu; Scenes/Main Alternative;
 	
  Observations
- 	
+
+  	Disregarded Time limit since I was given a hard limit for Wednesday the 9th October when receiving the test;
 	Main Alternative = Main without "LOAD" and "NEW GAME" buttons, they are interchangeable as stated above;
  
 	Menu Scene
