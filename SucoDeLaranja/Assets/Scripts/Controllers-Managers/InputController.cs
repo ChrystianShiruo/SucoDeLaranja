@@ -12,11 +12,6 @@ public class InputController : MonoBehaviour {
         Instance = this;
     }
 
-    private void Update() {
-        if(Input.GetKeyDown(KeyCode.R)) {//TODO: for testing, remove later
-            SceneManager.LoadScene(0);
-        }
-    }
 
     public void CardMouseDown(Card card) {
         if(GameController.Instance.CurrentState!= GameController.GameState.Playing) {
