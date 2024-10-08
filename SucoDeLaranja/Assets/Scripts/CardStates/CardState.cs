@@ -27,11 +27,11 @@ public class CardState : ICardState {
     public virtual void Enter(Card card, ICardState oldState) {
         _card = card;
         _oldState = oldState;
-        Debug.Log($"Enter {this}"); 
+        //Debug.Log($"Enter {this}"); 
     }
 
     public virtual void Exit() {
-        Debug.Log($"Exit {this}");
+        //Debug.Log($"Exit {this}");
     }
 }
 

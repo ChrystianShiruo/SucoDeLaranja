@@ -49,11 +49,9 @@ public class CardsManager : MonoBehaviour {
 
 
     public void FlipAllCards() {
-        Debug.Log($"FlipAllCards {_cards.Count}");
         _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
     }
     public void LoadAllCardStates() {
-        Debug.Log($"LoadAllCardStates {_cards.Count}");
         _cards.ForEach(card => card.LoadState());
     }
 
@@ -62,9 +60,6 @@ public class CardsManager : MonoBehaviour {
 
         if(_selectedCard == null) {
             SelectedCard = newCard;
-            Debug.Log("Selected first card");
-            //flip sfx
-
             return;
         }
         List<Card> pair = new List<Card>();

@@ -42,7 +42,6 @@ public class Card : MonoBehaviour {
     }
     public void ShowCard(bool playSound) {
         _animator.SetBool("Show", true);
-        //TODO: call flip sfx
     }
 
     public void HideCard() {

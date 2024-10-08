@@ -31,6 +31,7 @@ public class GameData {
 
 
     public int Pairs { get; private set; }
+    public Vector2Int Dimensions { get => _dimensions; }
 
     [SerializeField] private CardInstanceArray[] _board;
     [SerializeField] private Vector2Int _dimensions;
@@ -55,7 +56,6 @@ public class GameData {
 
     }
     public GameData(GameData gameData) {
-        Debug.Log("Gamedata.GameData(GameData gameData)");
         this._dimensions = gameData._dimensions;
         this._board = RebuildBoard(gameData);
 
@@ -71,7 +71,7 @@ public class GameData {
         _comboLevel++;
     }
     public void DecreaseScore() {
-        Score --;
+        Score--;
     }
     public void ResetCombo() {
         _comboLevel = 0;
