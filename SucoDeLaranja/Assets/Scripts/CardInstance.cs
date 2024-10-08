@@ -1,4 +1,5 @@
-﻿public class CardInstance {
+﻿[System.Serializable]
+public class CardInstance {
 
     public CardData cardData;
     public ICardState state;

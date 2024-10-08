@@ -15,7 +15,7 @@ public class CardsManager : MonoBehaviour {
     private GameData _gameData;
     private GridLayoutGroup _boardPanelLayoutGroup;
     private List<Card> _cards;
-    public Card _selectedCard;
+    private Card _selectedCard;
 
 
     public void Init(GameData gameData) {
@@ -24,9 +24,9 @@ public class CardsManager : MonoBehaviour {
         instance = this;
 
         _boardPanelLayoutGroup = _boardPanel.GetComponent<GridLayoutGroup>();
-        _boardPanelLayoutGroup.constraintCount = _gameData.Board.GetLength(1);
+        _boardPanelLayoutGroup.constraintCount = _gameData.Board[0].cardArray.Length;
 
-        SetBoardLayout(_boardPanel, new Vector2Int(_gameData.Board.GetLength(0), _gameData.Board.GetLength(1)));
+        SetBoardLayout(_boardPanel, new Vector2Int(_gameData.Board.Length, _gameData.Board[0].cardArray.Length));
         InstantiateCards(_gameData.Board);
 
     }
@@ -60,17 +60,17 @@ public class CardsManager : MonoBehaviour {
         _selectedCard = null;
     }
 
-    private void InstantiateCards(CardInstance[,] board) {
+    private void InstantiateCards(CardInstanceArray[] board) {
 
-        int width = board.GetLength(0);
-        int height = board.GetLength(1);
+        int width = board.Length;
+        int height = board[0].cardArray.Length;
         _cards = new List<Card>();
 
 
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 GameObject go = Instantiate(_cardPrefab, _boardPanel);
-                go.GetComponent<Card>().Init(board[x, y]);
+                go.GetComponent<Card>().Init(board[x].cardArray[y]);
                 _cards.Add(go.GetComponent<Card>());
             }
         }

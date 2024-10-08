@@ -27,13 +27,22 @@ public class UIController : MonoBehaviour {
         _gameData = gameData;
 
 
-        pairs = (_gameData.Board.GetLength(0) * _gameData.Board.GetLength(1)) / 2;
+        pairs = (_gameData.Board.Length * _gameData.Board[0].cardArray.Length) / 2;
         _gameData.OnScoreChange += SetScoreText;
         _gameData.OnTurnsChange += SetTurnsText;
         _gameData.OnMatchesChange += SetMatchesText;
 
-        UpdateCounters(gameData);
+        UpdateCounters(_gameData);
     }
+
+    public void LoadGame() {
+        GameController.instance.LoadGame();
+    }
+    public void SaveGame() {
+        GameController.instance.SaveGame();
+    }
+
+
 
     private void SetScoreText(int value) {
         UpdateText(_scoreText, $"{value}");

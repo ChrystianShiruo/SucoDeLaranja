@@ -36,6 +36,16 @@ public class GameController : MonoBehaviour {
         _cardDic = SetCardDictionary(_cardPool);
     }
 
+    public void SaveGame() {
+        DataManager.SaveGameDataJson(_gameData);
+    }
+
+    public void LoadGame() {
+        _gameData = DataManager.LoadGameDataJson();
+        //TODO: reload game with loaded data
+
+    }
+
     private void Start() {
         StartCoroutine(InitializeGame(_boardDimensions));
     }

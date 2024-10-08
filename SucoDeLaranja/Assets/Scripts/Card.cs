@@ -7,14 +7,14 @@ using TMPro;
 
 public class Card : MonoBehaviour {
 
-    public CardInstance CardInstance { get => _cardState; }
-    public int CardId { get => _cardState.cardData.id; }
+    public CardInstance CardInstance { get => _cardInstance; }
+    public int CardId { get => _cardInstance.cardData.id; }
     public Animator Animator { get => _animator; }
 
     [SerializeField] private TextMeshProUGUI _labelText;
     [SerializeField] private Renderer _cardBackground;
 
-    private CardInstance _cardState;
+    private CardInstance _cardInstance;
     //private Action OnChangeCardState;
     private Animator _animator;
     private List<ICardState> _stateRoutineQueue;
@@ -28,11 +28,11 @@ public class Card : MonoBehaviour {
         _stateRoutineQueue = new List<ICardState>();
         _animator = GetComponent<Animator>();
         StartCoroutine(StateMachineRoutine());
-        _cardState = cardState;
+        _cardInstance = cardState;
         _cardBackground.material = new Material(_cardBackground.material);
         _cardBackground.material.color = cardState.cardData.color;
-        _labelText.text = $"{_cardState.cardData.id}";
-        transform.localScale *= CardsManager.cardScaleMultiplier * _cardState.cardData.cellFill;
+        _labelText.text = $"{_cardInstance.cardData.id}";
+        transform.localScale *= CardsManager.cardScaleMultiplier * _cardInstance.cardData.cellFill;
     }
 
 
@@ -52,13 +52,13 @@ public class Card : MonoBehaviour {
     private IEnumerator StateMachineRoutine() {
         while(true) {
             if(_stateRoutineQueue.Count > 0) {
-                _cardState.state?.Exit();
+                _cardInstance.state?.Exit();
 
-                _stateRoutineQueue[0].Enter(this, _cardState.state);
+                _stateRoutineQueue[0].Enter(this, _cardInstance.state);
 
                 yield return _stateRoutineQueue[0].Execute();
 
-                _cardState.state = _stateRoutineQueue[0];
+                _cardInstance.state = _stateRoutineQueue[0];
                 _stateRoutineQueue.RemoveAt(0);
             } else {
                 yield return null;
