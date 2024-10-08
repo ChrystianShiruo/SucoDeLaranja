@@ -42,14 +42,23 @@ public class GameData {
 
 
     public GameData(List<CardData> cards, Vector2Int dimensions) {
-        BuildNewBoard(FillCardMatrix(cards, dimensions));
+        _board = BuildNewBoard(FillCardMatrix(cards, dimensions));
 
         _turns = 0;
         _score = 0;
         _matches = 0;
         _comboLevel = 0;
     }
+    public GameData(GameData gameData) {
+        Debug.Log("Gamedata.GameData(GameData gameData)");
+        this._dimensions = gameData._dimensions;
+        this._board = RebuildBoard(gameData);
 
+        this.Turns = gameData.Turns;
+        this.Score = gameData.Score;
+        this.Matches = gameData._matches;
+        this._comboLevel = gameData._comboLevel;
+    }
     public void AddScore() {
         Score += 1 + _comboLevel;
         _comboLevel++;
@@ -60,18 +69,34 @@ public class GameData {
     }
 
 
-    private void BuildNewBoard(CardData[,] cards) {
+    private CardInstanceArray[] BuildNewBoard(CardData[,] cards) {
         _dimensions = new Vector2Int(cards.GetLength(0), cards.GetLength(1));
-        _board = new CardInstanceArray[_dimensions.x];
+        CardInstanceArray[] board = new CardInstanceArray[_dimensions.x];
 
         for(int x = 0; x < _dimensions.x; x++) {
             CardInstance[] c = new CardInstance[_dimensions.y];
-            _board[x] = new CardInstanceArray();
-            _board[x].cardArray = c;
+            board[x] = new CardInstanceArray();
+            board[x].cardArray = c;
             for(int y = 0; y < _dimensions.y; y++) {
-                _board[x].cardArray[y] = new CardInstance(cards[x, y]);
+                //Type type = Type.GetType(cards[x, y].state.StateName);
+                board[x].cardArray[y] = new CardInstance(cards[x, y]);
+
+                //_board[x].cardArray[y] = 
+                //    type == null ? new CardInstance(cards[x, y]) : 
+                //    new CardInstance(cards[x, y], Type.GetType(_board[x].cardArray[y].state.StateName));
             }
         }
+        return board;
+    }
+    private CardInstanceArray[] RebuildBoard(GameData gameData) {
+        //_dimensions = new Vector2Int(cards.GetLength(0), cards.GetLength(1));
+        CardInstanceArray[] board = gameData.Board;
+        foreach(CardInstanceArray cardInstanceArray in board) {
+            foreach(CardInstance cardInstance in cardInstanceArray.cardArray) {
+                cardInstance.state = (CardState)Utils.CreateNewInstance(cardInstance.state.StateName);
+            }
+        }
+        return board;
     }
 
     /// <summary>

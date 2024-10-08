@@ -16,10 +16,10 @@ public static class Utils {
         }
     }
 
-    public static object GetInstance(Type type) {
+    public static object CreateNewInstance(Type type) {
         return Activator.CreateInstance(type);
     }
-    public static object GetInstance(string typeName) {
+    public static object CreateNewInstance(string typeName) {
         return Activator.CreateInstance(Type.GetType(typeName));
     }
 }

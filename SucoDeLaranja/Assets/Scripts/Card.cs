@@ -36,16 +36,23 @@ public class Card : MonoBehaviour {
 
     }
 
-
+    #region Animation
     public void ShowCard() {
         _animator.SetBool("Show", true);
         //TODO: call flip sfx
     }
+
     public void HideCard() {
         _animator.SetBool("Show", false);
     }
-
+    public void TriggerAnimation(string trigger) {
+        _animator.SetTrigger(trigger);
+    }
+    #endregion
     //FSM
+    public void LoadState() {
+        SetState((CardState)Utils.CreateNewInstance(CardInstance.state.StateName));
+    }
     public void SetState(CardState newState) {
         _stateRoutineQueue.Add(newState);
     }

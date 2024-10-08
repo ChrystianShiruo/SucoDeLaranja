@@ -11,6 +11,8 @@ public class UIController : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _matchesText;
     [SerializeField] private TextMeshProUGUI _turnsText;
+    [Space(40)]
+    [SerializeField] private Button _saveButton;
 
     private int pairs;
     private GameData _gameData;
@@ -18,6 +20,15 @@ public class UIController : MonoBehaviour {
     private Action<int> _turnsChangeActions;
     private Action<int> _matchesChangeActions;
 
+
+    private void Start() {
+        _saveButton.interactable = false;
+        GameController.instance.OnChangeGameState += ToggleSaveButtonInteraction;
+    }
+
+    private void ToggleSaveButtonInteraction(GameController.GameState gameState) {
+        _saveButton.interactable = gameState == GameController.GameState.Playing;
+    }
 
     private void OnDestroy() {
         if(_scoreChangeActions != null) {

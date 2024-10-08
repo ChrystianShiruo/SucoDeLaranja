@@ -35,8 +35,12 @@ public class CardsManager : MonoBehaviour {
 
 
     public void FlipAllCards() {
-        Debug.Log(_cards.Count);
+        Debug.Log($"FlipAllCards {_cards.Count}");
         _cards.ForEach(card => card.SetState(new CardStateFacingDown()));
+    }
+    public void LoadAllCardStates() {
+        Debug.Log($"LoadAllCardStates {_cards.Count}");
+        _cards.ForEach(card => card.LoadState());
     }
 
     public void SelectCard(Card newCard) {
@@ -55,9 +59,10 @@ public class CardsManager : MonoBehaviour {
         //compare if another card already selected        
         if(newCard.CardId == _selectedCard.CardId) {
             GameController.instance.PairScored();
-            StartCoroutine(SyncCardStates(typeof(CardStatePaired), pair));
+            pair.ForEach(card => card.SetState(new CardStatePaired()));
         } else {
             GameController.instance.PairFailed();
+            //pair.ForEach(card => card.SetState(new CardStateFacingDown()));
             StartCoroutine(SyncCardStates(typeof(CardStateFacingDown), pair));
         }
 
@@ -99,20 +104,22 @@ public class CardsManager : MonoBehaviour {
         _boardPanelLayoutGroup.cellSize = new Vector2(x, y);
     }
 
-    //TODO: not working properly, redo caching if animation ended on Card class
     private IEnumerator SyncCardStates(Type state, List<Card> cards) {
-
+        //TODO: block save
         //wait frame for animations to start
         yield return null;
 
+        float animationLenght = 0;
         //wait until all cards finished last state
         foreach(Card card in cards) {
-            yield return new WaitWhile(() => card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1 < 0.99f);
+            animationLenght = animationLenght > card.Animator.GetCurrentAnimatorStateInfo(0).length ? animationLenght : card.Animator.GetCurrentAnimatorStateInfo(0).length;
+            //yield return new WaitWhile(() => card.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1 < 0.99f);
         }
 
-        yield return new WaitForSeconds(1f);
-        cards.ForEach(card => card.SetState((CardState)Utils.GetInstance(state)));
-
+        yield return new WaitForSeconds(animationLenght);
+        yield return new WaitForSeconds(.5f);
+        cards.ForEach(card => card.SetState((CardState)Utils.CreateNewInstance(state)));
+        //TODO: reenable save
     }
 
 }

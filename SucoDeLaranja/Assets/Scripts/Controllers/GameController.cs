@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour {
 
     public static GameController instance;
+    public Action<GameState> OnChangeGameState;
 
     public enum GameState {
         None,
@@ -15,7 +16,13 @@ public class GameController : MonoBehaviour {
     }
 
     public GameData GameData { get => _gameData; }
-    public GameState CurrentState { get => _currentState; }
+    public GameState CurrentState {
+        get => _currentState;
+        private set {
+            _currentState = value;
+            OnChangeGameState?.Invoke(_currentState);
+        }
+    }
 
     [SerializeField] private List<CardData> _cardPool;
     [SerializeField] private UIController _uiController;
@@ -23,62 +30,64 @@ public class GameController : MonoBehaviour {
     [SerializeField] private Vector2Int _boardDimensions;
     [SerializeField] private float _preGameTime;
 
-    private Dictionary<int, CardData> _cardDic;
     private GameState _currentState;
+    private Dictionary<int, CardData> _cardDic;
     private Card[,] _cards;
     private GameData _gameData;
-
+    private Coroutine _currentRoutine;
     #region MonoBehaviourMethods
     private void Awake() {
         if(instance == null) {
             instance = this;
         }
-        _currentState = GameState.None;
+        CurrentState = GameState.None;
         _cardDic = SetCardDictionary(_cardPool);
     }
     #region Coroutines
     private IEnumerator InitializeNewGame(Vector2Int layout) {
-        Debug.Log("b");
-
-        _currentState = GameState.SettingUp;
+        CurrentState = GameState.SettingUp;
         //setup board
         CreateGameData(layout, _cardPool);
 
         //show all cards
         _uiController.Init(_gameData);
         _cardsManager.Init(_gameData);
-        //flip cards
-        Debug.Log("c");
 
+        //load card states (CardStatePreGame)
+        _cardsManager.LoadAllCardStates();
+
+        //flip cards
         yield return HideCards(_preGameTime);
-        Debug.Log("d");
 
         //allow player interaction with the game
-        _currentState = GameState.Playing;
+        CurrentState = GameState.Playing;
     }
 
     private IEnumerator LoadSavedGame(GameData gameData) {
-        _currentState = GameState.SettingUp;
-        _gameData = gameData;
+        
+        CurrentState = GameState.SettingUp;
+
+        //retrieve board
+        //_gameData = new GameData(gameData);
+        _gameData = new GameData(gameData);
 
         //show all cards
         _uiController.Init(_gameData);
         _cardsManager.Init(_gameData);
-        //flip cards
-        yield return HideCards(_preGameTime);
+        //load card states
+        _cardsManager.LoadAllCardStates();
+        //yield return HideCards(_preGameTime);
         //allow player interaction with the game
 
 
         yield return null;
 
-        _currentState = GameState.Playing;
+        CurrentState = GameState.Playing;
     }
 
     private IEnumerator HideCards(float time) {
-        Debug.Log($"c2 {time}");
 
         yield return new WaitForSeconds(time);
-        Debug.Log($"c3 {time}");
 
         _cardsManager.FlipAllCards();
     }
@@ -88,8 +97,9 @@ public class GameController : MonoBehaviour {
     #endregion
     #endregion
 
+    #region Save/Load
     public void SaveGame() {
-        if(_currentState != GameState.Playing) {
+        if(CurrentState != GameState.Playing) {
             return;
         }
         DataManager.SaveGameDataJson(_gameData);
@@ -98,23 +108,22 @@ public class GameController : MonoBehaviour {
 
     public void LoadGame() {
         _gameData = DataManager.LoadGameDataJson();
-        //TODO: reload game with loaded data
-        StartCoroutine(LoadSavedGame(_gameData));
-
+        if(_currentRoutine != null) {
+            StopCoroutine(_currentRoutine);
+        }
+        _currentRoutine = StartCoroutine(LoadSavedGame(_gameData));
     }
-
+    #endregion
 
     public void IncrementTurn() {
         _gameData.Turns++;
     }
     public void PairScored() {
-        //paired! +matches; +score; +combo
         _gameData.AddScore();
         _gameData.Matches++;
 
     }
     public void PairFailed() {
-        //not paired; reset combo; flip cards to back again
         _gameData.ResetCombo();
     }
 
@@ -125,8 +134,10 @@ public class GameController : MonoBehaviour {
         if((_boardDimensions.x * _boardDimensions.y) % 2 != 0) {
             return false;
         }
-        Debug.Log("a");
-        StartCoroutine(InitializeNewGame(_boardDimensions));
+        if(_currentRoutine != null) {
+            StopCoroutine(_currentRoutine);
+        }
+        _currentRoutine = StartCoroutine(InitializeNewGame(_boardDimensions));
         return true;
     }
 
