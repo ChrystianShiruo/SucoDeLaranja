@@ -11,8 +11,6 @@ public class UIController : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _matchesText;
     [SerializeField] private TextMeshProUGUI _turnsText;
-    [Space(40)]
-    [SerializeField] private SaveButton _saveButton;
 
     private GameData _gameData;
     private Action<int> _scoreChangeActions;
