@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-    public static GameController instance;
+    public static GameController Instance;
     public Action<GameState> OnChangeGameState;
+    public Action OnMatch;
+    public Action OnMismatch;
+    public Action OnGameOver;
+
 
     public enum GameState {
         None,
@@ -37,8 +41,8 @@ public class GameController : MonoBehaviour {
     private Coroutine _currentRoutine;
     #region MonoBehaviourMethods
     private void Awake() {
-        if(instance == null) {
-            instance = this;
+        if(Instance == null) {
+            Instance = this;
         }
         CurrentState = GameState.None;
         _cardDic = SetCardDictionary(_cardPool);
@@ -121,12 +125,25 @@ public class GameController : MonoBehaviour {
     public void PairScored() {
         _gameData.AddScore();
         _gameData.Matches++;
-
+        VerifyGameOver();
+        OnMatch?.Invoke();
     }
+
     public void PairFailed() {
         _gameData.ResetCombo();
+        OnMismatch?.Invoke();
     }
 
+    private void VerifyGameOver() {
+        if(_gameData.Matches == _gameData.Pairs) {
+            GameOver();
+        }
+    }
+
+    private void GameOver() {
+        CurrentState = GameState.Finished;
+        OnGameOver?.Invoke();
+    }
 
     #region Game Setup
     public bool NewGame() {

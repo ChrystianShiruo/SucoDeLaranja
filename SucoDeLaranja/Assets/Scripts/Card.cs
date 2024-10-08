@@ -20,7 +20,7 @@ public class Card : MonoBehaviour {
     private List<CardState> _stateRoutineQueue;
 
     private void OnMouseDown() {
-        InputController.instance.CardMouseDown(this);
+        InputController.Instance.CardMouseDown(this);
     }
 
 
@@ -38,6 +38,9 @@ public class Card : MonoBehaviour {
 
     #region Animation
     public void ShowCard() {
+        _animator.SetBool("Show", true);        
+    }
+    public void ShowCard(bool playSound) {
         _animator.SetBool("Show", true);
         //TODO: call flip sfx
     }

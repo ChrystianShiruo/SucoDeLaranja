@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class InputController : MonoBehaviour {
 
-    public static InputController instance;
+    public static InputController Instance;
 
 
     private void Awake() {
-        instance = this;
+        Instance = this;
     }
 
     private void Update() {
@@ -19,12 +19,12 @@ public class InputController : MonoBehaviour {
     }
 
     public void CardMouseDown(Card card) {
-        if(GameController.instance.CurrentState!= GameController.GameState.Playing) {
+        if(GameController.Instance.CurrentState!= GameController.GameState.Playing) {
             return;
         }
 
         if(card.CardInstance.state.GetType() == typeof(CardStateFacingDown)) {
-            CardsManager.instance.SelectCard(card);
+            CardsManager.Instance.SelectCard(card);
         }
     }
 

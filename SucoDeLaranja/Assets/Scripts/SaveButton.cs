@@ -15,7 +15,7 @@ public class SaveButton : MonoBehaviour {
     private void Update() {
         _button.interactable =
             (InteractableWaitQueue == null &&
-            GameController.instance.CurrentState == GameController.GameState.Playing) ? true : false;
+            GameController.Instance.CurrentState == GameController.GameState.Playing) ? true : false;
     }
 
 }

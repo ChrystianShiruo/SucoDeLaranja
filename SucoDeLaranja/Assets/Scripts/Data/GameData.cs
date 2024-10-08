@@ -29,6 +29,9 @@ public class GameData {
         get => _matches;
     }
 
+
+    public int Pairs { get; private set; }
+
     [SerializeField] private CardInstanceArray[] _board;
     [SerializeField] private Vector2Int _dimensions;
     [SerializeField] private int _turns;
@@ -48,6 +51,8 @@ public class GameData {
         _score = 0;
         _matches = 0;
         _comboLevel = 0;
+        Pairs = (Board.Length * Board[0].cardArray.Length) / 2;
+
     }
     public GameData(GameData gameData) {
         Debug.Log("Gamedata.GameData(GameData gameData)");
@@ -58,6 +63,7 @@ public class GameData {
         this.Score = gameData.Score;
         this.Matches = gameData._matches;
         this._comboLevel = gameData._comboLevel;
+        this.Pairs = gameData.Pairs;
     }
     public void AddScore() {
         Score += 1 + _comboLevel;

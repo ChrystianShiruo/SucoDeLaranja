@@ -14,7 +14,6 @@ public class UIController : MonoBehaviour {
     [Space(40)]
     [SerializeField] private SaveButton _saveButton;
 
-    private int pairs;
     private GameData _gameData;
     private Action<int> _scoreChangeActions;
     private Action<int> _turnsChangeActions;
@@ -39,7 +38,6 @@ public class UIController : MonoBehaviour {
         OnDestroy();
 
         _gameData = gameData;
-        pairs = (_gameData.Board.Length * _gameData.Board[0].cardArray.Length) / 2;
         _scoreChangeActions += SetScoreText;
         _gameData.OnScoreChange += _scoreChangeActions;
 
@@ -52,13 +50,13 @@ public class UIController : MonoBehaviour {
     }
 
     public void LoadGame() {
-        GameController.instance.LoadGame();
+        GameController.Instance.LoadGame();
     }
     public void SaveGame() {
-        GameController.instance.SaveGame();
+        GameController.Instance.SaveGame();
     }
     public void NewGame() {
-        GameController.instance.NewGame();
+        GameController.Instance.NewGame();
     }
 
 
@@ -68,7 +66,7 @@ public class UIController : MonoBehaviour {
     }
 
     private void SetMatchesText(int value) {
-        UpdateText(_matchesText, $"{value}/{pairs}");
+        UpdateText(_matchesText, $"{value}/{_gameData.Pairs}");
     }
 
     private void SetTurnsText(int value) {

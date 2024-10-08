@@ -12,7 +12,7 @@ public class CardStateSelected : CardState {
         Debug.Log(oldType.ToString());
 
         if(oldType == typeof(CardStateFacingDown)) {
-            card.ShowCard();
+            card.ShowCard(true);
         }
     }
 }
