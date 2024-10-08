@@ -98,7 +98,7 @@ public class CardsManager : MonoBehaviour {
         }
 
         yield return new WaitForSeconds(1f);
-        cards.ForEach(card => card.SetState((ICardState)Utils.GetInstance(state)));
+        cards.ForEach(card => card.SetState((CardState)Utils.GetInstance(state)));
 
     }
 

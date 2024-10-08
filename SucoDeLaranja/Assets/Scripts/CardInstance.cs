@@ -2,7 +2,7 @@
 public class CardInstance {
 
     public CardData cardData;
-    public ICardState state;
+    public CardState state;
 
     /// <summary>
     /// FacingDown:

@@ -17,7 +17,7 @@ public class Card : MonoBehaviour {
     private CardInstance _cardInstance;
     //private Action OnChangeCardState;
     private Animator _animator;
-    private List<ICardState> _stateRoutineQueue;
+    private List<CardState> _stateRoutineQueue;
 
     private void OnMouseDown() {
         InputController.instance.CardMouseDown(this);
@@ -25,7 +25,7 @@ public class Card : MonoBehaviour {
 
 
     public void Init(CardInstance cardState) {
-        _stateRoutineQueue = new List<ICardState>();
+        _stateRoutineQueue = new List<CardState>();
         _animator = GetComponent<Animator>();
         StartCoroutine(StateMachineRoutine());
         _cardInstance = cardState;
@@ -45,7 +45,7 @@ public class Card : MonoBehaviour {
     }
 
     //FSM
-    public void SetState(ICardState newState) {
+    public void SetState(CardState newState) {
         _stateRoutineQueue.Add(newState);
     }
 
