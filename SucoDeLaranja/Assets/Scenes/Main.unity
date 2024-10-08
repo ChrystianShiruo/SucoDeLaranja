@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 154482871}
   - component: {fileID: 154482870}
   - component: {fileID: 154482869}
+  - component: {fileID: 154482872}
   m_Layer: 5
   m_Name: LoadBt
   m_TagString: Untagged
@@ -437,6 +438,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 154482867}
   m_CullTransparentMesh: 1
+--- !u!114 &154482872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154482867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4643309db50b4b4b89910d60c60fc2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &173433434
 GameObject:
   m_ObjectHideFlags: 0
